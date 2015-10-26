@@ -202,7 +202,31 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;
+;; 1.1.7
+;;
+
+; Emphasis on the distinction between "declarative knowledge” (properties of
+; things) and “imperative knowledge” (how to do things)
 ;
-; 1.1.7
+; Implementation of Newton's method for finding square roots:
+;   Whenever we have a guess y for the value of the square root of a number
+;   x, we can get a better guess by averaging y with x/y
+
+(include "newtons_method.scm")
+
+(test 4 (square 2))
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+(test #t (and (> (sqrt 9) 3) (< (sqrt 9) 3.001)))
+
+; Emphasis that no special looping construct is needed to do iteration in
+; scheme; recursively calling the same procedure is sufficient to acheive
+; iteration.
+
 ;
-; Emphasis on the distinction between "declarative knowledge” (properties of things) and “imperative knowledge” (how to do things)
+; Exercise 1.6: Explain what would happen if "if" is implemented as an
+;               ordinary procedure instead of a special form, and used
+;               to implement sqrt-iter above.
+;
+
