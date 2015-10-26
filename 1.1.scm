@@ -1,5 +1,96 @@
 (require-extension test)
 
+;;
+;; 1.1 The elements of programming
+;;
+
+; (non-)distinction of procedures and data
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;
+;; 1.1.1 Expressions
+;;
+
+; Lisp expressions:
+; use prefix notation
+; can be nested to arbitrary depth
+; coding convention is to use pretty printing so it is more readable
+; First mention of “repl": the read-eval-print loop
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;
+;; 1.1.2 Naming and the environment
+;;
+
+; Variable definitions in Lisp: (define pi 3.14159)
+; First mention of the environment: the internal memory of Lisp that keeps track of name-object associations
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;
+;; 1.1.3 Evaluating combinations
+;;
+
+; Emphasis that evaluation is a recursive process: the rules of evaluation are the same for subexpressions as it is for the main expression. Values “percolate” from the terminal nodes up to the final result.
+; Evaluation of combinations will eventually end up as the evaluation of primitives, whose evaluation is based on
+; The values of the numerals are the numbers they name
+; The values of built-in operators are the machine instruction sequences that carry out the corresponding operations
+; The values of other names are the objects associated with those names in the environment
+; Emphasis of the importance of the environment as a “context” to evaluation
+; Exceptions to the general rule of evaluation are called "special forms", such as “define”, which is not a primitive nor an expression
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;
+;; 1.1.4 Compound procedures
+;;
+
+; Review of elements introduced so far:
+; Numbers and arithmetic operations are primitive data and procedures
+; Nesting of combinations provides a means of combining operations
+; Definitions that associate names with values provide a limited means of abstraction
+; General form for defining "compound procedures” (as opposed to “primitive procedures”):
+; (define (<name> <formal parameters>)
+;            <body>)
+; For example, the “square” procedure would be defined as:
+; (define (square x)
+;            (* x x))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;
+;; 1.1.5 The substitution model for procedure application
+;;
+
+; Rule for evaluating compound procedures:
+;   Evaluate the body of the procedure with each formal parameter replaced by the corresponding argument
+; The process of substituting the arguments from the top down is the “substitution model” for procedure application. This model exists for pedagogical reasons, and doesn’t represent the actual implementation of the interpreter.
+; 
+; *Applicative order vs normal order*
+; Applicative order: evaluate arguments then apply
+; Normal order: fully expand then reduce
+; For procedures that can be modeled with substitution and that yield legitimate , applicative order and normal order produce the same results
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;
+;; 1.1.6 Conditional expressions and predicates
+;;
+
+; Case analyses: a special form in lisp that allows conditional execution
+; (cond (<p1> <e1>)
+;           (<p2> <e2>)
+;           (<p3> <e3>)
+;           …
+;           (<pn> <en>))
+; The expressions (<p> <e>) are clauses, where <p> is the predicate and <e> is the consequent expression
+; 
+; “if” is a special form that is a restricted type of conditional which is used when there are precisely two cases in the case analysis
+; 
+; Logical composition operations such as “and”, “or”, and “not" enable construction of compound predicates. “and” and “or” are actually special forms, since not all arguments are evaluated
+
 ;
 ; Exercise 1.1: What is the result printed by the interpreter in response to
 ;               each expression?
@@ -108,3 +199,10 @@
 ; which will only evaluate the expression where the predicate is true,
 ; and returning 0. It will never reach the infinite-recursive (p) procedure
 ; and thus will not hang.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;
+; 1.1.7
+;
+; Emphasis on the distinction between "declarative knowledge” (properties of things) and “imperative knowledge” (how to do things)
