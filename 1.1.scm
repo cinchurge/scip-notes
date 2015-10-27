@@ -292,3 +292,27 @@
 
 (test #t (< (fractional-diff (cube-root 8) 2) 0.001))
 (test #t (< (fractional-diff (cube-root 27) 3) 0.001))
+
+;;
+;; 1.1.8 Procedures as black-box abstractions
+;;
+
+; Emphasis on the decomposition strategy of complex procedures: a program
+; should not be broken apart simply by lines, but by identifiable tasks
+; that can be used as modules in defining other procedures.
+;
+; Abstraction of procedures are called "procedural abstractions", and provides
+; a convenient way to separate interface from implementation. Procedure definitions
+; should be able to supress detail.
+;
+; The name of a formal parameter of a procedure is a "bound variable". The meaning
+; of a procedure definition is unchanged if a bound variable is consistently
+; renamed throughout the definition.
+;
+; If a variable is not bound, we say that it is "free". The set of expressions
+; for which a binding defines a name is called the "scope" of that name. In the
+; Newton's method example, symbols such as <, -, abs, and square are free, while
+; guess and x are bound.
+;
+; Emphasis on "block structure" and "lexical scoping", which allows the use
+; of closures within procedures.
