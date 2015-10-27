@@ -26,3 +26,20 @@
 
 (define (good-enough? guess prev-guess)
   (< (/ (abs (- guess prev-guess)) prev-guess) 0.001))
+
+
+;
+; Implementation of cube-root
+;
+(define (cube-root-iter guess x)
+  (define (cube-root-iter-impl guess x prev-guess)
+    (if (good-enough? guess prev-guess)
+        guess
+        (cube-root-iter-impl (cube-root-improve guess x) x guess)))
+  (cube-root-iter-impl guess x (+ guess 1)))
+
+(define (cube-root-improve y x)
+  (/ (+ (/ x (square y))
+        (* 2 y))
+     3))
+

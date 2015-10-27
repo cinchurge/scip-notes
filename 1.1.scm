@@ -281,3 +281,14 @@
 (define t 1e-320)
 (define st (sqrt t))
 (test #t (< (fractional-diff st 1e-160) 0.001))
+
+;
+; Exercise 1.8: Implement Newton's method for cube roots
+;
+(include "newtons_method2.scm")
+
+(define (cube-root x)
+  (cube-root-iter 1.0 x))
+
+(test #t (< (fractional-diff (cube-root 8) 2) 0.001))
+(test #t (< (fractional-diff (cube-root 27) 3) 0.001))

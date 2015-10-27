@@ -7,3 +7,6 @@
 (define (fractional-diff x y)
   (/ (abs-diff x y) y))
 
+(define (average x y)
+  (/ (+ x y) 2))
+
