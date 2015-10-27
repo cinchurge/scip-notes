@@ -5,9 +5,11 @@
 ; the process with an improved guess:
 
 (define (sqrt-iter guess x)
-  (if (good-enough? guess x)
-      guess
-      (sqrt-iter (improve guess x) x)))
+  (define (sqrt-iter-impl guess x prev-guess)
+    (if (good-enough? guess prev-guess)
+        guess
+        (sqrt-iter-impl (improve guess x) x guess)))
+  (sqrt-iter-impl guess x (+ guess 1)))
 
 ; A guess is improved by averaging it with the quotient of the radicand and the
 ; old guess:
@@ -22,5 +24,5 @@
 
 ; and
 
-(define (good-enough? guess x)
-  (< (abs (- (square guess) x)) 0.001))
+(define (good-enough? guess prev-guess)
+  (< (/ (abs (- guess prev-guess)) prev-guess) 0.001))

@@ -218,15 +218,66 @@
 (test 4 (square 2))
 (define (sqrt x)
   (sqrt-iter 1.0 x))
-(test #t (and (> (sqrt 9) 3) (< (sqrt 9) 3.001)))
+(test #t (< (abs-diff (sqrt 9) 3) 0.001))
 
 ; Emphasis that no special looping construct is needed to do iteration in
 ; scheme; recursively calling the same procedure is sufficient to acheive
-; iteration.
+; iteration. Efficiency-wise, this is acheived through "tail-recursion",
+; or "tail call optimization" in the interpreter, which analyzes the code
+; and decides whether or not to actually recurse or merely iterate.
 
 ;
 ; Exercise 1.6: Explain what would happen if "if" is implemented as an
-;               ordinary procedure instead of a special form, and used
-;               to implement sqrt-iter above.
+;               ordinary procedure instead of a special form (such as the
+;               one shown below, and used to implement sqrt-iter above.
+;
+; (define (new-if predicate then-clause else-clause)
+;   (cond (predicate then-clause)
+;         (else else-clause)))
+; 
+; Alyssa's implementation of sqrt-iter using new-if:
+;
+; (define (sqrt-iter guess x)
+;   (new-if (good-enough? guess x)
+;           guess
+;           (sqrt-iter (improve guess x) x)))
+;
+; Due to applicative order, arguments passed into procedures are evaluated
+; before being actually passed, meaning that the else-clause will be
+; evaluated regardless of the truth value of the predicate. This will cause
+; the new sqrt-iter to run indefinitely and hang forever.
 ;
 
+;
+; Exercise 1.7: Explain why our current impelmentation of good-enough? doesn't
+;               work for either large or small numbers, and design an improved
+;               version of sqrt-iter that bases the criterion between results
+;               from subsequent iterations.
+;
+; Why it doesn't work for small numbers: floating point numbers have limited
+; precision and are limited by the number of bits used. The precision for
+; 16-bit floats is around 1e-4, while it is around 1e-8 for 32-bit floats.
+; Our criterion of converging at a difference of 0.001 will clearly fail for
+; numbers smaller than 1e-8.
+;
+; Why it doesn't work for large numbers: floating point arithemetic always
+; have rounding error, which is approximately the magnitude of epsilon. For
+; very large numbers, the error introduced in every operation is a fraction
+; of the operands, thus for very large numbers, say > 1e8, we will have
+; approximately unity error every operation, which will always be larger than
+; our criterion. Since the value of the error depends on the operand, a set
+; criterion will never be suitable for the full range of operands.
+
+(include "newtons_method2.scm")
+
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+(test #t (and (>= (sqrt 9) 3) (<= (sqrt 9) 3.001)))
+
+(define t 1e100)
+(define st (sqrt t))
+(test #t (< (fractional-diff st 1e50) 0.001))
+
+(define t 1e-320)
+(define st (sqrt t))
+(test #t (< (fractional-diff st 1e-160) 0.001))
