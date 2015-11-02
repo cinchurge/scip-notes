@@ -179,3 +179,39 @@
 ;         => 65536
 (test 65536 (A 3 3))
 
+;;
+;; 1.2.2 Tree recursion
+;;
+
+; Recursive implementation of Fibonacci numbers:
+(define (fib n)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (fib (- n 1))
+                 (fib (- n 2))))))
+
+; The recursive procedure for calculating Fibonacci numbers is shown to be
+; tree recursive, hence duplicating a lot of work: the number of times it will
+; compute (fib 1) and (fib 0) is precisely Fib(n+1), where the value of Fib(n)
+; grows exponentially with n. More precisely, Fib(n) is the closest integer
+; to phi^n / sqrt(5), where phi = (1 + sqrt(5))/2 ~ 1.6180, the Golden Ratio,
+; which satisfies phi^2 = phi + 1.
+;
+; In general, the number of steps required by a tree-recursive process will
+; be proportional to the number of nodes in the tree, while the space required
+; will be proportional to the maximum depth of the tree.
+;
+; Iterative implementation of fib:
+(define (fib n)
+  (fib-iter 1 0 n))
+(define (fib-iter a b count)
+  (if (= count 0)
+      b
+      (fib-iter (+ a b) a (- count 1))))
+;
+; The complexity of the iterative implementation is linear in n, thus much
+; efficient, yet tree recursive processes aren't necessarily useless; they
+; are a natural and powerful tool for dealing with hierarchical data
+; structures.
+
+
