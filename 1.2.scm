@@ -214,4 +214,91 @@
 ; are a natural and powerful tool for dealing with hierarchical data
 ; structures.
 
+; Example: counting change
+; The nuber of ways to change amount `a` using `n` kinds of coins equals:
+;  - the number of ways to change amount a using all but the first kind of coin, plus
+;  - the number of ways to change amount `a - d` using all `n` kinds of coins, where `d`
+;    is the denomination of the first kind of coin
+;
+; We can recursively reduce the problem of changing a given amount to the problem of
+; changing smaller amounts using fewer kinds of coins.
+;
+; The algorithm:
+; If `a` is exactly 0, we should count that as 1 way to make change
+; If `a` is less than 0, we should count that as 0 ways to make change
+; If `n` is 0, we should count that as 0 ways to make change
 
+(define (count-change amount) (cc amount 5))
+(define (cc amount kinds-of-coins)
+  (cond ((= amount 0) 1)
+        ((or (< amount 0) (= kinds-of-coins 0)) 0)
+        (else (+ (cc amount
+                     (- kinds-of-coins 1))
+                 (cc (- amount
+                        (first-denomination kinds-of-coins))
+                     kinds-of-coins)))))
+(define (first-denomination kinds-of-coins)
+  (cond ((= kinds-of-coins 1) 1)
+        ((= kinds-of-coins 2) 5)
+        ((= kinds-of-coins 3) 10)
+        ((= kinds-of-coins 4) 25)
+        ((= kinds-of-coins 5) 50)))
+
+(test 1 (cc 0 5))
+(test 292 (count-change 100))
+
+; Being a tree-recursive process, this procedure also makes redundant calculations,
+; hence it isn't as efficient as an iterative implementation. It isn't obvious how to
+; design a better algorithm for computing the result, and the author has left this
+; as a challenge.
+;
+; Some have suggested that we can get the best of both worlds by designing a smart
+; compiler than automatically converts a recursive process into an iterative process.
+;
+; Footnote: Tabulation or "memoization" can be used to improve the performance, which
+; is relatively easy to implement.
+
+;
+; Exercise 1.11: A function `f` is defined by the rule that
+;
+;                f(n) = n if n < 3,
+;                f(n) = f(n - 1) + 2f(n - 2) + 3f(n - 3) if n >= 3
+;
+;                write a procedure that computes `f` by means of a recursive process.
+;                write a procedure that computes `f` by means of an iterative process
+; f(0) => 0
+; f(1) => 1
+; f(2) => 2
+; f(3) => f(2) + 2f(1) + 3f(0) => 4
+; f(4) => f(3) + 2f(2) + 3f(1) => 11
+
+; Recursive implementation:
+(define (f n)
+        (if (< n 3)
+            n
+            (+ (f (- n 1))
+               (* 2 (f (- n 2)))
+               (* 3 (f (- n 3))))))
+(test 0 (f 0))
+(test 1 (f 1))
+(test 2 (f 2))
+(test 4 (f 3))
+(test 11 (f 4))
+
+; Iterative implementation: this is very similar to (fib) in that it takes
+; three previous terms instead of two to derive f(n)
+; state variable: previous 3 terms and counter
+(define (f n)
+  (define (f-iter a b c count)
+    (if (= count 0)
+        c
+        (f-iter (+ a (* 2 b) (* 3 c)) a b (- count 1))))
+  (if (< n 3)
+      n
+      (f-iter 2 1 0 n)))
+
+(test 0 (f 0))
+(test 1 (f 1))
+(test 2 (f 2))
+(test 4 (f 3))
+(test 11 (f 4))
