@@ -302,3 +302,31 @@
 (test 2 (f 2))
 (test 4 (f 3))
 (test 11 (f 4))
+
+;
+; Exercise 1.12: Write a procedure that computes elements of Pascal's triangle
+;                by means of a recursive process
+;
+; My strategy is to write a procedure f(i, j) that takes two arguments: a vertical position
+; and a horizontal pozition. Since it is a triangle, for number with position i, j,
+; the two numbers above it will have position (i-1, j-1) and (i-1, j). The resulting
+; rule:
+; f(i, j) = 1 when i==0 or j==0 or i==j
+; f(i, j) = f(i-1, j-1) + f(i-1, j) otherwise
+
+(define (pascals-triangle i j)
+  (if (or (= i 0) (= j 0) (= i j))
+      1
+      (+ (pascals-triangle (- i 1) (- j 1))
+         (pascals-triangle (- i 1) j))))
+(test 1 (pascals-triangle 0 0))
+(test 1 (pascals-triangle 1 0))
+(test 1 (pascals-triangle 1 1))
+(test 1 (pascals-triangle 2 0))
+(test 2 (pascals-triangle 2 1))
+(test 1 (pascals-triangle 2 2))
+(test 1 (pascals-triangle 3 0))
+(test 3 (pascals-triangle 3 1))
+(test 3 (pascals-triangle 3 2))
+(test 1 (pascals-triangle 3 3))
+
