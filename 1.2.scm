@@ -419,3 +419,24 @@
 (test 128 (fast-expt-iter 2 7 1))
 (test 1024 (fast-expt-iter 2 10 1))
 (test 10000 (fast-expt-iter 100 2 1))
+
+;
+; Exercise 1.7: design a multiplication procedure analogous to fast-expt
+;               that uses a logarithmic number of steps
+;
+(define (fast-mul-iter m n a)
+  (cond ((= n 0) a)
+        ((even? n) (fast-mul-iter (double m) (halve n) a))
+        (else (fast-mul-iter m (- n 1) (+ a m)))))
+
+(define (double x)
+  (+ x x))
+
+(define (halve x)
+  (/ x 2))
+
+(test (* 2 2) (fast-mul-iter 2 2 0))
+(test (* 2 3) (fast-mul-iter 2 3 0))
+(test (* 2 4) (fast-mul-iter 2 4 0))
+(test (* 12 12) (fast-mul-iter 12 12 0))
+(test (* 12345 12345) (fast-mul-iter 12345 12345 0))
